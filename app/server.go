@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 	"strconv"
+	"time"
 )
 
 type httpRequestParts struct {
@@ -15,7 +16,14 @@ type httpRequestParts struct {
 	useragent string
 }
 
+func rootHandle(conn net.Conn) {
+	conn.Write([]byte("HTTP/1.1 200 OK\r\n"))
+	conn.Close()
+}
+
 func echoHandle(conn net.Conn, msg string) {
+	fmt.Println("processing echo :" + msg )
+	fmt.Println("done processing")
 	conn.Write([]byte("HTTP/1.1 200 OK\r\n"))
 	conn.Write([]byte("Content-Type: text/plain\r\n"))
 	conn.Write([]byte("Content-Length: " + strconv.Itoa(len(msg)) +"\r\n\r\n"))
@@ -28,6 +36,11 @@ func userAgentHandle(conn net.Conn, useragent string) {
 	conn.Write([]byte("Content-Type: text/plain\r\n"))
 	conn.Write([]byte("Content-Length: " + strconv.Itoa(len(useragent)) +"\r\n\r\n"))
 	conn.Write([]byte(useragent))
+	conn.Close()
+}
+
+func defaultHandle(conn net.Conn) {
+	conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
 	conn.Close()
 }
 
@@ -57,23 +70,21 @@ func main() {
 		hrp.hostname = splitLine2[1]
 		hrp.useragent = splitLine3[1]
 		pathType := strings.Split(hrp.target, "/")[1]
-		fmt.Println("method:" + hrp.method)
-		fmt.Println("target:" + hrp.target)
-		fmt.Println("hostname:" + hrp.hostname)
-		fmt.Println("useragent:" + hrp.useragent)
-		fmt.Println(pathType)
+	//  fmt.Println("method:" + hrp.method)
+	//	fmt.Println("target:" + hrp.target)
+	//	fmt.Println("hostname:" + hrp.hostname)
+	//	fmt.Println("useragent:" + hrp.useragent)
+	//	fmt.Println(pathType)
 
 		switch pathType {
 		case "":
-			conn.Write([]byte("HTTP/1.1 200 OK\r\n\r\n"))
-			conn.Close()
+			go rootHandle(conn)
 		case "echo":
-			echoHandle(conn, hrp.target[6:])
+			go echoHandle(conn, hrp.target[6:])
 		case "user-agent":
-			userAgentHandle(conn, hrp.useragent)
+			go userAgentHandle(conn, hrp.useragent)
 		default:
-			conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
-			conn.Close()
+			go defaultHandle(conn)
 		}
 	}
 }
