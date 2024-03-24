@@ -11,8 +11,8 @@ import (
 func echoHandle(conn net.Conn, msg string) {
 	conn.Write([]byte("HTTP/1.1 200 OK\r\n"))
 	conn.Write([]byte("Content-Type: text/plain\r\n"))
-	conn.Write([]byte("Content-Length: " + strconv.Itoa(len(msg)) +"\r\n"))
-	conn.Write([]byte(msg+"\r\n"))
+	conn.Write([]byte("Content-Length: " + strconv.Itoa(len(msg)) +"\r\n\r\n"))
+	conn.Write([]byte(msg))
 	conn.Close()
 }
 
