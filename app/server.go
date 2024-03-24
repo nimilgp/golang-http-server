@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 )
-
+//post a file
 type req struct {
   method string
   path string
