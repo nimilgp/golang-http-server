@@ -210,3 +210,4 @@ func sendSuccessResponse(content []byte, contentType string, conn net.Conn) {
     sendInternalServerErrorResponse(conn)
   }
 }
+//the test expects conetent length
