@@ -5,7 +5,16 @@ import (
 	"net"
 	"os"
 	"strings"
+	"strconv"
 )
+
+func echoHandle(conn net.Conn, msg string) {
+	conn.Write([]byte("HTTP/1.1 200 OK\r\n"))
+	conn.Write([]byte("Content-Type: text/plain\r\n"))
+	conn.Write([]byte("Content-Length: " + strconv.Itoa(len(msg)) +"\r\n"))
+	conn.Write([]byte(msg+"\r\n"))
+	conn.Close()
+}
 
 func main() {
 	l, err := net.Listen("tcp", "0.0.0.0:4221")
@@ -28,7 +37,12 @@ func main() {
 		if (path == "/") {
 			conn.Write([]byte("HTTP/1.1 200 OK\r\n\r\n"))
 		} else {
-			conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
+			pathParts := strings.Split(path, "/")
+			if (pathParts[1] == "echo") {
+				echoHandle(conn, path[6:])
+			} else {
+				conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
+			}
 		}
 	}
 }
