@@ -16,7 +16,7 @@ type httpRequestParts struct {
 }
 
 func rootHandle(conn net.Conn) {
-	conn.Write([]byte("HTTP/1.1 200 OK\r\n"))
+	conn.Write([]byte("HTTP/1.1 200 OK\r\n\r\n"))
 }
 
 func echoHandle(conn net.Conn, msg string) {
@@ -69,7 +69,6 @@ func main() {
 	//	fmt.Println("target:" + hrp.target)
 	//	fmt.Println("hostname:" + hrp.hostname)
 	//	fmt.Println("useragent:" + hrp.useragent)
-
 		switch pathType {
 		case "":
 			go rootHandle(conn)
