@@ -69,7 +69,6 @@ func main() {
 	//	fmt.Println("target:" + hrp.target)
 	//	fmt.Println("hostname:" + hrp.hostname)
 	//	fmt.Println("useragent:" + hrp.useragent)
-	//	fmt.Println(pathType)
 
 		switch pathType {
 		case "":
