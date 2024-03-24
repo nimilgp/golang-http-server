@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 	"strconv"
-	"time"
 )
 
 type httpRequestParts struct {
