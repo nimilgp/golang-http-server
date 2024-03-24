@@ -17,7 +17,6 @@ type httpRequestParts struct {
 
 func rootHandle(conn net.Conn) {
 	conn.Write([]byte("HTTP/1.1 200 OK\r\n"))
-	conn.Close()
 }
 
 func echoHandle(conn net.Conn, msg string) {
@@ -27,7 +26,6 @@ func echoHandle(conn net.Conn, msg string) {
 	conn.Write([]byte("Content-Type: text/plain\r\n"))
 	conn.Write([]byte("Content-Length: " + strconv.Itoa(len(msg)) +"\r\n\r\n"))
 	conn.Write([]byte(msg))
-	conn.Close()
 }
 
 func userAgentHandle(conn net.Conn, useragent string) {
@@ -35,12 +33,10 @@ func userAgentHandle(conn net.Conn, useragent string) {
 	conn.Write([]byte("Content-Type: text/plain\r\n"))
 	conn.Write([]byte("Content-Length: " + strconv.Itoa(len(useragent)) +"\r\n\r\n"))
 	conn.Write([]byte(useragent))
-	conn.Close()
 }
 
 func defaultHandle(conn net.Conn) {
 	conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
-	conn.Close()
 }
 
 func main() {
